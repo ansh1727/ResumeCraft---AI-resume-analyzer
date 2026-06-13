@@ -14,12 +14,17 @@ export const uploadResume = async (req, res, next) => {
 
     let extractedData = await parseResumePDF(req.file.path);
 
-    if (process.env.GEMINI_API_KEY && !/^(your|replace|example)/i.test(process.env.GEMINI_API_KEY.trim())) {
-      const enhanced = await enhanceExtractedData(extractedData.rawText);
-      if (enhanced) {
-        extractedData = { ...extractedData, ...enhanced, rawText: extractedData.rawText };
-      }
-    }
+    // Temporarily disable Gemini enhancement
+// It is returning objects instead of string arrays
+
+/*
+if (process.env.GEMINI_API_KEY && !/^(your|replace|example)/i.test(process.env.GEMINI_API_KEY.trim())) {
+  const enhanced = await enhanceExtractedData(extractedData.rawText);
+  if (enhanced) {
+    extractedData = { ...extractedData, ...enhanced, rawText: extractedData.rawText };
+  }
+}
+*/
 
     const resume = await Resume.create({
       user: req.user._id,
